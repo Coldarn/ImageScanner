@@ -1,5 +1,5 @@
 import cjson
-import imagescanner
+from imagescanner import ImageScanner
 
 from cStringIO import StringIO
 from twisted.web import server
@@ -7,22 +7,31 @@ from twisted.web.xmlrpc import XMLRPC, Binary
 
 class ScannerDevices(XMLRPC):
 
-    def xmlrpc_list(self):
-        device_list = imagescanner.list()
-        return cjson.encode(device_list)
+    def xmlrpc_listScanners(self):
+        devices = ImageScanner().listScanners()
+        serialized_devices = [self.serialize(device) for device in devices]
+        return cjson.encode(serialized_devices)
 
     def xmlrpc_scan(self, device_id):
-        device = imagescanner.get(device_id)
-        image = device.scan()
+        image = ImageScanner().scan(device_id)
+        if image is None:
+            return None
         image_data = StringIO()
         image.save(image_data, 'tiff')
         image_data.seek(0) 
         return Binary(image_data.read())
-
-if __name__ == '__main__':
-    from twisted.internet import reactor
-    port = settings.SERVER_PORT
     
-    root = ScannerDevice()
+    def serialize(self, device):
+        return {
+            'id': device.id,
+            'name': device.name,
+            'manufacturer': getattr(device, 'manufacturer', None),
+            'description': getattr(device, 'description', None),
+        }
+
+def runserver(port):
+    from twisted.internet import reactor
+    
+    root = ScannerDevices()
     reactor.listenTCP(port, server.Site(root))
     reactor.run()
