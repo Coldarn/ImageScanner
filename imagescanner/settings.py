@@ -1,0 +1,7 @@
+import logging
+
+SERVER_PORT = 8080
+REMOTE_DEVICES = ['127.0.0.1']
+ENABLE_TEST_BACKEND = True
+
+LOGGING_LEVEL = logging.NOTSET
