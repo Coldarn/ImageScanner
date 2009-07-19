@@ -43,8 +43,9 @@ class ImageScanner(object):
             try:
                 logging.debug('Importing %s' % backend)
                 backend_module = import_module(backend)
-            except:
+            except Exception, e:
                 logging.warning('Error importing %s [skiping]' % backend)
+                logging.warning(e)
                 # Could not import, so go to the next backend 
                 continue
 
