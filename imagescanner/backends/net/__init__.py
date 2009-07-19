@@ -57,7 +57,7 @@ class Scanner(object):
         self.id = "%s/%s" % (remote_host, kwargs['id'])
         self._remote_id = kwargs['id']
         self.name = kwargs['name']
-        self.manufacturer = kwargs.get('manufactorer', None)
+        self.manufacturer = kwargs.get('manufacturer', None)
         self.description = kwargs.get('description', None)
         self._proxy = proxy
 

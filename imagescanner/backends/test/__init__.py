@@ -4,7 +4,7 @@ import Image
 from imagescanner.backends import base 
 
 class ScannerManager(base.ScannerManager):
-    def __init__(self):
+    def __init__(self, **kwargs):
         self._devices = []
  
     def __refresh__(self):
