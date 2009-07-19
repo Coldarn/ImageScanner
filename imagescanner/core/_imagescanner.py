@@ -15,12 +15,12 @@ class ImageScanner(object):
         backends = []
 
         # Enable default backend for each system
-        #if os.name == 'posix':
-        #    logging.debug('Poxis backend enabled (%s)' % POSIX_BACKEND)
-        #    backends.append(POSIX_BACKEND)
-        #elif os.name == 'nt':
-        #    logging.debug('NT backend enabled (%s)' % NT_BACKEND)
-        #    backends.append(NT_BACKEND)
+        if os.name == 'posix':
+            logging.debug('Poxis backend enabled (%s)' % POSIX_BACKEND)
+            backends.append(POSIX_BACKEND)
+        elif os.name == 'nt':
+            logging.debug('NT backend enabled (%s)' % NT_BACKEND)
+            backends.append(NT_BACKEND)
         
         # Check if we should load the test backend
         if hasattr(settings, 'ENABLE_TEST_BACKEND'):
