@@ -1,0 +1,6 @@
+== Version 0.9 ==
+ * Add support to OS X
+ * Improve and review doc strings
+ * Remove dependency of twisted
+ * Write dependency list for each OS
+ * Unit tests
