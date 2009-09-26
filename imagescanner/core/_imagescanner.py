@@ -59,22 +59,22 @@ class ImageScanner(object):
         
             self.managers.append(manager)
 
-    def listScanners(self):
+    def list_scanners(self):
         """List all devices for all the backends available"""
         logging.debug('Looking for all scanner devices') 
         scanners = []
         for manager in self.managers:
-            scanners.extend(manager.listScanners())
+            scanners.extend(manager.list_scanners())
        
         logging.debug('Found scanners: %s' % scanners) 
         return scanners
 
-    def getScanner(self, id):
+    def get_scanner(self, id):
         """Get the device with the given ID"""
         logging.debug('Looking for scanner with id: %s' % id)
         scanner = None
         for manager in self.managers:
-            scanner = manager.getScanner(id)
+            scanner = manager.get_scanner(id)
             if scanner is not None:
                 logging.debug('Scanner %s found' % id)
                 return scanner
@@ -84,7 +84,7 @@ class ImageScanner(object):
         """Shortcut for scanning without get the device"""
 
         logging.debug('Trying to scan using: %s and %s' % (id, kwargs))
-        scanner = self.getScanner(id)
+        scanner = self.get_scanner(id)
         if scanner is not None:
             return scanner.scan(**kwargs)
        

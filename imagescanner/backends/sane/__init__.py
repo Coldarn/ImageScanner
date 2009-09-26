@@ -23,14 +23,14 @@ class ScannerManager(base.ScannerManager):
                 logging.debug(e)
         sane.exit()
     
-    def getScanner(self, id):
+    def get_scanner(self, id):
         self._refresh()
         for dev in self._devices:
             if dev.id == id:
                 return dev
         return None
 
-    def listScanners(self):
+    def list_scanners(self):
         self._refresh()
         return self._devices
 

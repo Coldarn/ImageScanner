@@ -2,11 +2,11 @@
 
 class ScannerManager(object):
 
-    def getScanner(self, id):
+    def get_scanner(self, id):
         """Return a scanner with the given ID or None if not found"""
         raise NotImplementedError
 
-    def listScanners(self):
+    def list_scanners(self):
         """Return a list with  all the available devices"""
         raise NotImplementedError
 

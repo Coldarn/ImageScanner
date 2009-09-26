@@ -7,8 +7,8 @@ from twisted.web.xmlrpc import XMLRPC, Binary
 
 class ScannerDevices(XMLRPC):
 
-    def xmlrpc_listScanners(self):
-        devices = ImageScanner().listScanners()
+    def xmlrpc_list_scanners(self):
+        devices = ImageScanner().list_scanners()
         serialized_devices = [self.serialize(device) for device in devices]
         return cjson.encode(serialized_devices)
 

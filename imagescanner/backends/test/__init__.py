@@ -12,7 +12,7 @@ class ScannerManager(base.ScannerManager):
         scanner = Scanner('test-0', "Pyscan", "Test Device")
         self._devices.append(scanner)
     
-    def getScanner(self, id):
+    def get_scanner(self, id):
         self.__refresh__()
 
         for dev in self._devices:
@@ -20,7 +20,7 @@ class ScannerManager(base.ScannerManager):
 
         return None
 
-    def listScanners(self):
+    def list_scanners(self):
         self.__refresh__()
         return self._devices
 

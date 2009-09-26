@@ -25,14 +25,14 @@ class ScannerManager(base.ScannerManager):
                 logging.debug(e)
         self.sm.destroy()
     
-    def getScanner(self, id):
+    def get_scanner(self, id):
         self._refresh()
         for dev in self._devices:
             if dev.id == id:
                 return dev
         return None
 
-    def listScanners(self):
+    def list_scanners(self):
         self._refresh()
         return self._devices
 
@@ -42,10 +42,10 @@ class Scanner(base.Scanner):
         self._sourceName = sourceName
 
         self._open()
-        self._getIdentity()
+        self._get_identity()
         self._close()
     
-    def _getIdentity(self):
+    def _get_identity(self):
         identity = self._scanner.GetIdentity()
         self.name = identity.get('ProductName')
         self.manufacturer = identity.get('Manufacturer')

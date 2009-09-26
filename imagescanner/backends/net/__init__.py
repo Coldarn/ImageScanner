@@ -18,14 +18,14 @@ class ScannerManager(base.ScannerManager):
             proxy = xmlrpclib.ServerProxy("http://%s/" % host, allow_none=True)
             self._proxies.append(proxy)
         
-    def getScanner(self, id):
+    def get_scanner(self, id):
         self._refresh()
         for dev in self._devices:
             if dev.id == id:
                 return dev
         return None
  
-    def listScanners(self):
+    def list_scanners(self):
         self._refresh()
         return self._devices
 
@@ -35,7 +35,7 @@ class ScannerManager(base.ScannerManager):
         for proxy in self._proxies:
             remote_host = proxy._ServerProxy__host
             try:
-                response = proxy.listScanners()
+                response = proxy.list_scanners()
             except socket.error:
                 logging.error('Connection refused when trying to list '
                               'scanners in %s [skiping]' % remote_host)
