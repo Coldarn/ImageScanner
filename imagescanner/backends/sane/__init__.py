@@ -10,15 +10,18 @@ class ScannerManager(base.ScannerManager):
         
         sane.init()
         devices = sane.get_devices()    
-        for dev in devices: 
-            scanner_id = 'sane-%s' % len(self._devices)
+        for dev in devices:
+            # Check if sane is able to open this device, if not just skip
             try:
-                scanner = Scanner(scanner_id, dev[0], dev[1], dev[2], dev[3])
-                self._devices.append(scanner)
-            except Exception, exc:
-                # XXX: Which exception should be here?
-                # Logging to try to figure it out
-                logging.debug(exc)
+                scanner = sane.open(dev[0])
+                scanner.close()
+            except:
+                continue 
+                                
+            scanner_id = 'sane-%s' % len(self._devices)
+            scanner = Scanner(scanner_id, dev[0], dev[1], dev[2], dev[3])
+            self._devices.append(scanner)
+
         sane.exit()
 
 class Scanner(base.Scanner):  
