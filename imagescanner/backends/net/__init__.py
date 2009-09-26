@@ -11,52 +11,45 @@ from imagescanner.backends import base
 class ScannerManager(base.ScannerManager):
 
     def __init__(self, remote_hosts=(), **kwargs):
-        self._devices = []
+        super(ScannerManager, self).__init__(remote_hosts, **kwargs)
         
         self._proxies = []
         for host in remote_hosts:
             proxy = xmlrpclib.ServerProxy("http://%s/" % host, allow_none=True)
             self._proxies.append(proxy)
-        
-    def get_scanner(self, id):
-        self._refresh()
-        for dev in self._devices:
-            if dev.id == id:
-                return dev
-        return None
- 
-    def list_scanners(self):
-        self._refresh()
-        return self._devices
 
     def _refresh(self):
         logging.debug('Reloading remote device information')
         self._devices = []
         for proxy in self._proxies:
+            # TODO: Redo it without accessing protected members
             remote_host = proxy._ServerProxy__host
             try:
                 response = proxy.list_scanners()
             except socket.error:
                 logging.error('Connection refused when trying to list '
-                              'scanners in %s [skiping]' % remote_host)
+                              'scanners in %s [skiping]', remote_host)
                 continue
-            logging.debug('JSON answer from %s: %s' % (remote_host, response))
+            logging.debug('JSON answer from %s: %s', remote_host, response)
             
             scanner_list = cjson.decode(response)
             for scanner_info in scanner_list:
                 scanner = Scanner(proxy, **scanner_info)
                 self._devices.append(scanner)
-        logging.debug('Remote devices loaded: %s' % self._devices)
+        logging.debug('Remote devices loaded: %s', self._devices)
  
-class Scanner(object):
+class Scanner(base.Scanner):
 
-    def __init__(self, proxy, **kwargs):
+    def __init__(self, **kwargs):
         # Different hosts can have the same id, so the host need to be part of
         #   the scanner id
+        scanner_id = kwargs.get('scanner_id', None)
+        proxy = kwargs.get('proxy', None)
         remote_host = proxy._ServerProxy__host
-        self.id = "%s/%s" % (remote_host, kwargs['id'])
-        self._remote_id = kwargs['id']
-        self.name = kwargs['name']
+
+        self.id = "%s/%s" % (remote_host, scanner_id)
+        self._remote_id = scanner_id
+        self.name = kwargs.get('name', None)
         self.manufacturer = kwargs.get('manufacturer', None)
         self.description = kwargs.get('description', None)
         self._proxy = proxy
@@ -75,5 +68,4 @@ class Scanner(object):
         return '<%s: %s - %s>' % (self.id, self.manufacturer, self.name)
 
     def status(self):
-        # TODO: Define standard status
-        raise NotImplementedError
+        pass

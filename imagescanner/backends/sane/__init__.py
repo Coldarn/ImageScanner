@@ -4,8 +4,6 @@ import logging
 from imagescanner.backends import base 
 
 class ScannerManager(base.ScannerManager):
-    def __init__(self, **kwargs):
-        self._devices = []
  
     def _refresh(self):
         self._devices = []
@@ -13,30 +11,19 @@ class ScannerManager(base.ScannerManager):
         sane.init()
         devices = sane.get_devices()    
         for dev in devices: 
-            id = 'sane-%s' % len(self._devices)
+            scanner_id = 'sane-%s' % len(self._devices)
             try:
-                scanner = Scanner(id, dev[0], dev[1], dev[2], dev[3])
+                scanner = Scanner(scanner_id, dev[0], dev[1], dev[2], dev[3])
                 self._devices.append(scanner)
-            except Exception, e:
+            except Exception, exc:
                 # XXX: Which exception should be here?
                 # Logging to try to figure it out
-                logging.debug(e)
+                logging.debug(exc)
         sane.exit()
-    
-    def get_scanner(self, id):
-        self._refresh()
-        for dev in self._devices:
-            if dev.id == id:
-                return dev
-        return None
-
-    def list_scanners(self):
-        self._refresh()
-        return self._devices
 
 class Scanner(base.Scanner):  
-    def __init__(self, id, device, manufacturer, name, description):
-        self.id = id
+    def __init__(self, scanner_id, device, manufacturer, name, description):
+        self.id = scanner_id
         self.manufacturer = manufacturer
         self.name = name
         self.description = description
@@ -45,7 +32,7 @@ class Scanner(base.Scanner):
     def __repr__(self):
         return '<%s: %s - %s>' % (self.id, self.manufacturer, self.name)
     
-    def scan(self):
+    def scan(self, dpi=200):
         sane.init()
         scanner = sane.open(self._device)
         image = scanner.scan()

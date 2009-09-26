@@ -5,11 +5,19 @@ from cStringIO import StringIO
 from twisted.web import server
 from twisted.web.xmlrpc import XMLRPC, Binary
 
+def serialize(device):
+    return {
+        'id': device.id,
+        'name': device.name,
+        'manufacturer': getattr(device, 'manufacturer', None),
+        'description': getattr(device, 'description', None),
+    }
+
 class ScannerDevices(XMLRPC):
 
     def xmlrpc_list_scanners(self):
         devices = ImageScanner().list_scanners()
-        serialized_devices = [self.serialize(device) for device in devices]
+        serialized_devices = [serialize(device) for device in devices]
         return cjson.encode(serialized_devices)
 
     def xmlrpc_scan(self, device_id):
@@ -21,14 +29,6 @@ class ScannerDevices(XMLRPC):
         image_data.seek(0) 
         return Binary(image_data.read())
     
-    def serialize(self, device):
-        return {
-            'id': device.id,
-            'name': device.name,
-            'manufacturer': getattr(device, 'manufacturer', None),
-            'description': getattr(device, 'description', None),
-        }
-
 def runserver(port):
     from twisted.internet import reactor
     
