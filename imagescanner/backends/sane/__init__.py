@@ -1,5 +1,4 @@
 import sane
-import logging
 
 from imagescanner.backends import base 
 
