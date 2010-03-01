@@ -2,6 +2,7 @@
  * Improve and review doc strings
  * Remove dependency of twisted
  * Write dependency list for each OS
+ * Use simplejson when cjson is not available
 
 == Version 1.0 ==
  * Implement status codes
