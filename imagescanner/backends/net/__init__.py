@@ -10,9 +10,10 @@ from imagescanner.backends import base
 
 class ScannerManager(base.ScannerManager):
 
-    def __init__(self, remote_hosts=(), **kwargs):
-        super(ScannerManager, self).__init__(remote_hosts, **kwargs)
-        
+    def __init__(self, **kwargs):
+        super(ScannerManager, self).__init__(**kwargs)
+        remote_hosts = kwargs.get('remote_host', tuple())       
+ 
         self._proxies = []
         for host in remote_hosts:
             proxy = xmlrpclib.ServerProxy("http://%s/" % host, allow_none=True)
