@@ -12,7 +12,7 @@ class ScannerManager(base.ScannerManager):
 
     def __init__(self, **kwargs):
         super(ScannerManager, self).__init__(**kwargs)
-        remote_hosts = kwargs.get('remote_host', tuple())       
+        remote_hosts = kwargs.get('remote_hosts', tuple())       
  
         self._proxies = []
         for host in remote_hosts:
@@ -20,7 +20,7 @@ class ScannerManager(base.ScannerManager):
             self._proxies.append(proxy)
 
     def _refresh(self):
-        logging.debug('Reloading remote device information')
+        logging.info('Reloading remote device information')
         self._devices = []
         for proxy in self._proxies:
             # TODO: Redo it without accessing protected members
@@ -35,7 +35,8 @@ class ScannerManager(base.ScannerManager):
             
             scanner_list = cjson.decode(response)
             for scanner_info in scanner_list:
-                scanner = Scanner(proxy, **scanner_info)
+                scanner_info.update({'proxy': proxy})
+                scanner = Scanner(**scanner_info)
                 self._devices.append(scanner)
         logging.debug('Remote devices loaded: %s', self._devices)
  
