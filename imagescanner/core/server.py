@@ -23,7 +23,7 @@ class ScannerDevices(XMLRPC):
         image_data.seek(0) 
         return Binary(image_data.read())
     
-def runserver(port):
+def run(port):
     from twisted.internet import reactor
     
     root = ScannerDevices()

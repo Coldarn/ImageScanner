@@ -1,14 +1,19 @@
-from twisted.application import internet, service
-from twisted.web import server
-from imagescanner.core.server import ScannerDevices
-from imagescanner import settings
+#!/usr/bin/env python
 
-PORT = getattr(settings, 'SERVER_PORT', 8000)
+import sys
+import logging
+from imagescanner.core import server
+from optparse import OptionParser
 
-factory = ScannerDevices()
+parser = OptionParser()
+parser.add_option("-p", "--port", dest="port", default=8000,
+                  help="server port (default: 8000)")
 
-# this is the important bit
-application = service.Application('scanner-device')
-scanningService = internet.TCPServer(PORT, server.Site(factory))
-# add the service to the application
-scanningService.setServiceParent(application)
+(options, args) = parser.parse_args()
+
+port = int(options.port)
+
+logging.info('starting imagescanner server on port %s' % port)
+logging.info('waiting for connections...')
+server.run(port)
+

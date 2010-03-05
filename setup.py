@@ -3,7 +3,7 @@
 from setuptools import setup, find_packages
 
 setup(name='imagescanner',
-      version='0.8',
+      version='0.8.1',
       description='Multi-platform Python library to access scanner devices.',
       author='Sergio Campos',
       author_email='seocam@seocam.net',
