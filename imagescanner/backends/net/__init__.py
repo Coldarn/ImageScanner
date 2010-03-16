@@ -45,7 +45,7 @@ class Scanner(base.Scanner):
     def __init__(self, **kwargs):
         # Different hosts can have the same id, so the host need to be part of
         #   the scanner id
-        scanner_id = kwargs.get('scanner_id', None)
+        scanner_id = kwargs.get('id', None)
         proxy = kwargs.get('proxy', None)
         remote_host = proxy._ServerProxy__host
 
