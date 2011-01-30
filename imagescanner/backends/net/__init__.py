@@ -11,7 +11,7 @@ from imagescanner import settings
 from imagescanner.backends import base
 
 SEARCH_PORT = 3244
-SEARCH_TIMEOUT = 5
+SEARCH_TIMEOUT = 3
 
 class ScannerManager(base.ScannerManager):
 
@@ -24,7 +24,7 @@ class ScannerManager(base.ScannerManager):
 
         self._proxies = []
         for host in self.remote_hosts:
-            proxy = xmlrpclib.ServerProxy("http://%s/" % host, allow_none=True)
+            proxy = xmlrpclib.ServerProxy("http://%s" % host, allow_none=True)
             self._proxies.append(proxy)
 
 

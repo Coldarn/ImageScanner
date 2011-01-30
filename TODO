@@ -1,6 +1,5 @@
 == Version 0.9 ==
  * Improve and review doc strings
- * Remove dependency of twisted
  * Write dependency list for each OS
  * Use simplejson when cjson is not available
 

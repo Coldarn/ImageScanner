@@ -53,5 +53,5 @@ if options.broadcast:
 
 logging.info('starting imagescanner server on port %s' % options.port)
 logging.info('waiting for connections...')
-server.run(options.port)
+server.run(options.listen_address, options.port)
 
