@@ -30,10 +30,9 @@ class ImageScanner(object):
                 logging.debug('Test backend enabled (%s)', TEST_BACKEND)
                 backends.append(TEST_BACKEND)
         
-        # If trying to scan using a remote host enable network backend
-        if kwargs.get('remote_hosts'):
-            logging.debug('Network backend enabled (%s)', NETWORK_BACKEND)
-            backends.append(NETWORK_BACKEND)
+        # Always enable net backend
+        logging.debug('Network backend enabled (%s)', NETWORK_BACKEND)
+        backends.append(NETWORK_BACKEND)
 
         # Check if the user has own backends defined
         if BACKENDS is not None:

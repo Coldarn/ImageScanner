@@ -1,26 +1,99 @@
-import xmlrpclib
+import time
 import socket
 import logging
+import xmlrpclib
 from cStringIO import StringIO
 
 import Image
 import cjson
+from autoconnect import UdpReceiver
 from imagescanner import settings
 from imagescanner.backends import base
+
+SEARCH_PORT = 3244
+SEARCH_TIMEOUT = 5
 
 class ScannerManager(base.ScannerManager):
 
     def __init__(self, **kwargs):
         super(ScannerManager, self).__init__(**kwargs)
-        remote_hosts = kwargs.get('remote_hosts', tuple())       
- 
+        self.remote_hosts = kwargs.get('remote_hosts', list())       
+ 	
+        if kwargs.get('remote_search', True):
+            self._search_for_remote_devices()
+
         self._proxies = []
-        for host in remote_hosts:
+        for host in self.remote_hosts:
             proxy = xmlrpclib.ServerProxy("http://%s/" % host, allow_none=True)
             self._proxies.append(proxy)
 
+
+    def _search_for_remote_devices(self):
+        """Wait for broadcasted messages from remote ImageScanners.
+        
+        Listen in SEARCH_PORT waiting for broadcasted messages 
+        containing the connection information (IP address and port) 
+        that this backend will use to access the remote device. 
+        
+        The variable SEARCH_TIMEOUT is used to set timeout of each 
+        one of the connections. Everytime a new device is discovered 
+        the timeout is reset.
+        
+        """
+
+        logging.debug('Waiting for remote scanners')
+        udpr = UdpReceiver()
+        
+        wait_for_remote_devices = True
+        time_last_found = 0
+        while wait_for_remote_devices:
+            # Wait for a broadcast message
+            try:
+                encoded_msg, socket_addr = udpr.receive(port=SEARCH_PORT, 
+                                                        timeout=SEARCH_TIMEOUT)
+            except socket.timeout:
+                # in case of timeout stop searching
+                msg = ('Stop searching for for devices. '
+                       'Connection timeout (%s seconds)' % SEARCH_TIMEOUT)
+                logging.debug(msg)
+                wait_for_remote_devices = False
+                return 
+            
+            msg = cjson.decode(encoded_msg)
+            ipaddr = msg.get('ip')
+        
+            # If the IP address is generic or not set use the 
+            #   address which the broadcast message came from
+            if ipaddr == '0.0.0.0' or ipaddr is None:
+                ipaddr = socket_addr[0]
+    
+            # Check if the port was set in the request
+            if msg.get('port') is not None:
+                remote_device_addr = "%s:%s" % (ipaddr, msg['port'])
+                
+                # Check if the device wasn't discovered previously
+                if remote_device_addr not in self.remote_hosts:
+                    logging.debug('Remote ImageScanner found at %s' % 
+                                                    remote_device_addr)
+                    # We are good! 
+                    #   just add the device to the list and set 
+                    #   the time_last_found to now
+                    self.remote_hosts.append(remote_device_addr)
+                    time_last_found = time.time()
+                    logging.debug('Setting time_last_found to %s' % 
+                                                      time_last_found)
+            
+            # Stop searching if the last device was discovered more than
+            #   SEARCH_TIMEOUT seconds ago 
+            time_now = time.time() 
+            if int(time_now - time_last_found) > SEARCH_TIMEOUT:
+                logging.debug('Time now: %s' % time_now)
+                logging.debug('Last found at: %s' % time_last_found)
+                wait_for_remote_devices = False
+
+
     def _refresh(self):
-        logging.info('Reloading remote device information')
+        logging.info('Reloading remote devices information')
         self._devices = []
         for proxy in self._proxies:
             # TODO: Redo it without accessing protected members
