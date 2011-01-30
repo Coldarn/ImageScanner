@@ -10,6 +10,6 @@ setup(name='imagescanner',
       url='http://code.google.com/p/imagescanner/',
       packages=find_packages(),
       package_data={'': ['*.tiff']},
-      install_requires=[],
+      install_requires=['python-cjson'],
      )
 
