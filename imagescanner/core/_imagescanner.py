@@ -25,14 +25,14 @@ class ImageScanner(object):
             backends.append(NT_BACKEND)
         
         # Check if we should load the test backend
-        if hasattr(settings, 'ENABLE_TEST_BACKEND'):
-            if settings.ENABLE_TEST_BACKEND:
-                logging.debug('Test backend enabled (%s)', TEST_BACKEND)
-                backends.append(TEST_BACKEND)
+        if getattr(settings, 'ENABLE_TEST_BACKEND', False):
+            logging.debug('Test backend enabled (%s)', TEST_BACKEND)
+            backends.append(TEST_BACKEND)
         
         # Always enable net backend
-        logging.debug('Network backend enabled (%s)', NETWORK_BACKEND)
-        backends.append(NETWORK_BACKEND)
+        if getattr(settings, 'ENABLE_NET_BACKEND', False):
+            logging.debug('Network backend enabled (%s)', NETWORK_BACKEND)
+            backends.append(NETWORK_BACKEND)
 
         # Check if the user has own backends defined
         if BACKENDS is not None:
