@@ -1,6 +1,16 @@
 #!/usr/bin/env python
 
+import os
 from setuptools import setup, find_packages
+
+REQUIREMENTS = [
+    'python-cjson', 
+    'autoconnect', 
+    'PIL',
+]
+
+# Required only by Posix:
+if os.name == 'posix': REQUIREMENTS.append('pysane')
 
 setup(name='imagescanner',
       version='0.9-alpha',
@@ -10,6 +20,6 @@ setup(name='imagescanner',
       url='http://code.google.com/p/imagescanner/',
       packages=find_packages(),
       package_data={'': ['*.tiff']},
-      install_requires=['python-cjson', 'autoconnect', 'PIL'],
+      install_requires=REQUIREMENTS,
      )
 
