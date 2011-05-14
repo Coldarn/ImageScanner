@@ -1,18 +1,33 @@
+"""Imagescanner main class. All embeded backends are loaded here.
+
+$Id$""" 
+
 import os
 import logging
+from importlib import import_module
 
 from imagescanner import settings
-from imagescanner.utils.importlib import import_module
+
 
 POSIX_BACKEND = 'imagescanner.backends.sane'
 NT_BACKEND = 'imagescanner.backends.twain'
 NETWORK_BACKEND = 'imagescanner.backends.net'
 TEST_BACKEND = 'imagescanner.backends.test'
 
+# Look for aditional backends
 BACKENDS = getattr(settings, 'BACKENDS', None)
 
+
 class ImageScanner(object):
+    """Implements the interface from the backends with the lib."""
+
     def __init__(self, **kwargs):
+        """Load the appropriate backends and its scanner managers.
+    
+        All keyword arguments are also passed to the constructor
+        of each one of the ScannerManager.
+
+        """
         self.managers = []
         backends = []
 
@@ -29,7 +44,7 @@ class ImageScanner(object):
             logging.debug('Test backend enabled (%s)', TEST_BACKEND)
             backends.append(TEST_BACKEND)
         
-        # Always enable net backend
+        # Check if we should enable net backend
         if getattr(settings, 'ENABLE_NET_BACKEND', False):
             logging.debug('Network backend enabled (%s)', NETWORK_BACKEND)
             backends.append(NETWORK_BACKEND)
@@ -82,7 +97,6 @@ class ImageScanner(object):
 
     def scan(self, scanner_id, **kwargs):
         """Shortcut for scanning without get the device"""
-
         logging.debug('Trying to scan using: %s and %s', scanner_id, kwargs)
         scanner = self.get_scanner(scanner_id)
         if scanner is not None:

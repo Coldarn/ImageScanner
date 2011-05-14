@@ -6,6 +6,7 @@ from setuptools import setup, find_packages
 REQUIREMENTS = [
     'python-cjson', 
     'autoconnect', 
+    'importlib',
     'PIL',
 ]
 
