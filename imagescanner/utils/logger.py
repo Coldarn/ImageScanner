@@ -1,4 +1,5 @@
-                                                                    
+"""$Id$"""
+ 
 import logging
 from imagescanner import settings
 
