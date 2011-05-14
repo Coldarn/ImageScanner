@@ -1,8 +1,7 @@
 == Version 0.9 ==
  * Improve and review doc strings
  * [OK] Remove dependency of twisted
- * Write dependency list for each OS
- * Use simplejson when cjson is not available
+ * [OK] Write dependency list for each OS
  * [OK] Auto discovering devices on network
 
 == Version 1.0 ==
@@ -10,3 +9,4 @@
  * Add support to OS X
  * Read settings from /etc on linux
  * Unit tests
+ * Use simplejson when cjson is not available
