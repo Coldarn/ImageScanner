@@ -1,3 +1,7 @@
+"""SANE backend.
+
+$Id$"""
+
 import sane
 
 from imagescanner.backends import base 

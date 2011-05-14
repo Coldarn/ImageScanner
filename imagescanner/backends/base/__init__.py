@@ -1,6 +1,9 @@
-"""Abstract base classes"""
+"""Abstract base classes
+
+$Id$"""
 
 class ScannerManager(object):
+    """Abstract ScannerManager class"""
 
     def __init__(self, **kwargs):
         self._devices = []

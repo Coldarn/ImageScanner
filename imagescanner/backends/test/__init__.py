@@ -1,3 +1,7 @@
+"""Test backend
+
+$Id$"""
+
 import os
 import Image
 

@@ -1,3 +1,11 @@
+"""ImageScanner XMLRPC library. 
+
+Runs a server which provide some of the library features on the network.
+
+$id$
+
+"""
+
 import xmlrpclib
 from cStringIO import StringIO
 from SimpleXMLRPCServer import SimpleXMLRPCServer, SimpleXMLRPCRequestHandler

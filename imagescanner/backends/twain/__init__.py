@@ -1,3 +1,7 @@
+"""Twain backend.
+
+$Id$"""
+
 import logging
 from StringIO import StringIO
 

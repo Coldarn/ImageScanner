@@ -1,4 +1,6 @@
-"""$Id$"""
+"""Logging related stufff.
+
+$Id$"""
  
 import logging
 from imagescanner import settings

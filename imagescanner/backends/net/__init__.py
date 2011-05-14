@@ -1,3 +1,7 @@
+"""Network backend. Access devices provided by our the XMLRPC server.
+
+$Id"""
+
 import time
 import socket
 import logging
