@@ -47,17 +47,18 @@ class Scanner(base.Scanner):
         self.manufacturer = identity.get('Manufacturer')
         self.description = None
 
-    def _open(self):
+    def _open(self, resolution=0):
         self._src_manager = twain.SourceManager(0)
         self._scanner = self._src_manager.OpenSource(self._source_name)
-        self._scanner.SetCapability(twain.ICAP_YRESOLUTION, 
-                                    twain.TWTY_FIX32, 200.0)
+        if resolution > 0:
+            self._scanner.SetCapability(twain.ICAP_XRESOLUTION, twain.TWTY_FIX32, float(resolution))
+            self._scanner.SetCapability(twain.ICAP_YRESOLUTION, twain.TWTY_FIX32, float(resolution))
 
     def __repr__(self):
         return '<%s: %s - %s>' % (self.id, self.manufacturer, self.name)
     
     def scan(self, dpi=200):
-        self._open()
+        self._open(dpi)
         self._scanner.RequestAcquire(0, 0)
         info = self._scanner.GetImageInfo()
         if info:
