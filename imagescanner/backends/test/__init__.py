@@ -3,7 +3,7 @@
 $Id$"""
 
 import os
-import Image
+from PIL import Image
 
 from imagescanner.backends import base 
 

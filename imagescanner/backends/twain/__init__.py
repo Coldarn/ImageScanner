@@ -5,7 +5,7 @@ $Id$"""
 import logging
 from StringIO import StringIO
 
-import Image
+from PIL import Image
 import twain
 from imagescanner.backends import base
 
